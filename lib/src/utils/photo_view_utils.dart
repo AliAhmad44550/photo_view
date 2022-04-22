@@ -15,10 +15,18 @@ double getScaleForScaleState(
     case PhotoViewScaleState.zoomedOut:
       return _clampSize(scaleBoundaries.initialScale, scaleBoundaries);
     case PhotoViewScaleState.covering:
+      // print("=-=-=-=-=-=-=-=-=-=-=-=-");
+      // print(scaleBoundaries.childSize.height);
+      // print("=-=-=-=-=-=-=-=-=-=-=-=-");
       return _clampSize(
           _scaleForCovering(
-              scaleBoundaries.outerSize, scaleBoundaries.childSize),
+              scaleBoundaries.outerSize,
+              scaleBoundaries.childSize.height > 600
+                  ? Size(scaleBoundaries.childSize.width, 500)
+                  : scaleBoundaries.childSize),
           scaleBoundaries);
+    // case PhotoViewScaleState.covering:
+    //   return _clampSize(_scaleForCovering(scaleBoundaries.outerSize, scaleBoundaries.childSize), scaleBoundaries);
     case PhotoViewScaleState.originalSize:
       return _clampSize(1.0, scaleBoundaries);
     // Will never be reached
@@ -103,11 +111,7 @@ class ScaleBoundaries {
 
   @override
   int get hashCode =>
-      _minScale.hashCode ^
-      _maxScale.hashCode ^
-      _initialScale.hashCode ^
-      outerSize.hashCode ^
-      childSize.hashCode;
+      _minScale.hashCode ^ _maxScale.hashCode ^ _initialScale.hashCode ^ outerSize.hashCode ^ childSize.hashCode;
 }
 
 double _scaleForContained(Size size, Size childSize) {
